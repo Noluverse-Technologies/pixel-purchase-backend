@@ -8,6 +8,6 @@ class dummyController extends Controller
 {
     //
     function getData(){
-        return 'hello 222ddd';
+        dd("Hello"); 
     }
 }
