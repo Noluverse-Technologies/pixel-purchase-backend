@@ -17,6 +17,13 @@ use Modules\Users\Http\Controllers\AuthController;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::middleware('auth:api')->get('/users', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:api'], function () {
+
+
+    /**
+     * Sample gate implementation 
+     */
+    Route::middleware(['can:isAdmin'])->group(function () {
+        Route::get('/admintest', 'AuthController@adminTest');
+    });
 });

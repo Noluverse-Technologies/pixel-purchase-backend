@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Passport;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -23,6 +24,21 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        // Passport::route();
+
+
+        // define a admin user role 
+        Gate::define('isAdmin', function ($user) {
+            return $user->role == 1;
+        });
+
+        //define a author user role 
+        Gate::define('isSubscribed', function ($user) {
+            return $user->role == 2;
+        });
+
+        // define a editor role 
+        Gate::define('isNonSubscribed', function ($user) {
+            return $user->role == 3;
+        });
     }
 }

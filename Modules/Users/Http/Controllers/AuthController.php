@@ -40,10 +40,12 @@ class AuthController extends GenericResponseController
      */
     public function register(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
             'password' => 'required',
+            'role' => 'required',
             'c_password' => 'required|same:password',
         ]);
 
@@ -64,5 +66,11 @@ class AuthController extends GenericResponseController
         $success['name'] =  $user->name;
 
         return $this->sendResponse($success, 'User registered successfully.');
+    }
+
+
+    public function adminTest()
+    {
+        dd("into adminnn");
     }
 }
