@@ -1,4 +1,6 @@
 {
     "Authentication": true,
-    "Users": true
+    "Users": true,
+    "Pixels": true,
+    "License": true
 }

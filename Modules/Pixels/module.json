@@ -1,0 +1,13 @@
+{
+    "name": "Pixels",
+    "alias": "pixels",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Pixels\\Providers\\PixelsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

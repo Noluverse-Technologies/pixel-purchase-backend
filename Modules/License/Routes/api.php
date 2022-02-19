@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Modules\Users\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +13,6 @@ use Modules\Users\Http\Controllers\AuthController;
 |
 */
 
-Route::post('login', [AuthController::class, 'login']);
-Route::post('register', [AuthController::class, 'register']);
-
-Route::group(['middleware' => 'auth:api'], function () {
-
-    Route::middleware(['can:isAdmin'])->group(function () {
-        Route::get('/admintest', 'AuthController@adminTest');
-    });
+Route::middleware('auth:api')->get('/license', function (Request $request) {
+    return $request->user();
 });
