@@ -13,6 +13,10 @@ class GenericResponseController extends Controller
 {
 
 
+    /**
+     * Return a generic response.
+     */
+
     public static function sendResponse($result, $message)
     {
         $response = [
