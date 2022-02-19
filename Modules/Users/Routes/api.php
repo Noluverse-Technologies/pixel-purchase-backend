@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use Modules\Users\Http\Controllers\UsersController;
+use Modules\Users\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +14,8 @@ use Modules\Users\Http\Controllers\UsersController;
 |
 */
 
-Route::post('login', [UsersController::class, 'login']);
-Route::post('register', [UsersController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
 
 Route::middleware('auth:api')->get('/users', function (Request $request) {
     return $request->user();
