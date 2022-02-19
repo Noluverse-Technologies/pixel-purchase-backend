@@ -3,16 +3,15 @@
 namespace Modules\Users\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Modules\Users\Entities\User;
 use Auth;
 use Validator;
 use Illuminate\Routing\Controller;
-use Modules\Users\Http\Handlers\UsersHandler;
+
 
 class UsersController extends Controller
 {
-    
+
 
     /**
      * User login functionality.
@@ -20,17 +19,16 @@ class UsersController extends Controller
      */
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-            
-            $user = Auth::user(); 
-            $success['token'] =  $user->createToken('Nolu')-> accessToken; 
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+
+            $user = Auth::user();
+            $success['token'] =  $user->createToken('Nolu')->accessToken;
             $success['name'] =  $user->name;
-   
-            return $success['token'];
-        } 
-        else{ 
-            return "failure";
-        } 
+
+            return $this->sendResponse($success, 'User logged in successfully.');
+        } else {
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+        }
     }
 
     /**
@@ -41,25 +39,62 @@ class UsersController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
 
-        
-        if($validator->fails()){
-            // return $this->sendError('Validation Error.', $validator->errors());
-            dd("validation error");       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error', $validator->errors());
         }
-   
+
         $input = $request->all();
+
+        //hashes the password
         $input['password'] = bcrypt($input['password']);
+
         $user = User::create($input);
+
+
         $success['token'] =  $user->createToken('MyApp')->accessToken;
         $success['name'] =  $user->name;
-   
-        dd("usr registered");     
+
+        return $this->sendResponse($success, 'User registered successfully.');
     }
 
-    
+
+
+    public static function sendResponse($result, $message)
+    {
+        $response = [
+            'success' => true,
+            'data'    => $result,
+            'message' => $message,
+        ];
+
+        return response()->json($response, 200);
+    }
+
+
+    /**
+     * return error response.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public static function sendError($error, $errorMessages = [], $code = 404)
+    {
+        $response = [
+            'success' => false,
+            'message' => $error,
+        ];
+
+
+        if (!empty($errorMessages)) {
+            $response['data'] = $errorMessages;
+        }
+
+
+        return response()->json($response, $code);
+    }
 }

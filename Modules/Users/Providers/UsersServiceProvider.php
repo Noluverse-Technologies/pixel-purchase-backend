@@ -2,8 +2,11 @@
 
 namespace Modules\Users\Providers;
 
+use Carbon\PHPStan\Macro;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+
+
 
 class UsersServiceProvider extends ServiceProvider
 {
@@ -24,6 +27,7 @@ class UsersServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
@@ -51,7 +55,8 @@ class UsersServiceProvider extends ServiceProvider
             module_path($this->moduleName, 'Config/config.php') => config_path($this->moduleNameLower . '.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            module_path($this->moduleName, 'Config/config.php'), $this->moduleNameLower
+            module_path($this->moduleName, 'Config/config.php'),
+            $this->moduleNameLower
         );
     }
 
