@@ -24,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        
         /**
          * *Definitions of gate permissions
          */

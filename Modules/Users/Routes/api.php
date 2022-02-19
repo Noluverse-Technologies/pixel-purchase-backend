@@ -19,7 +19,7 @@ Route::post('register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth:api'], function () {
 
-    Route::middleware(['can:isAdmin'])->group(function () {
+    Route::middleware(['can:isSubscribedUser'])->group(function () {
         Route::get('/admintest', 'AuthController@adminTest');
     });
 });
