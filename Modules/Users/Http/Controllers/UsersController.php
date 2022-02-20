@@ -67,4 +67,22 @@ class UsersController extends GenericResponseController
         $update = $role->save();
         return $this->sendResponse('', 'Role updated successfully.');
     }
+
+
+    /**
+     * Delete user roles
+     */
+
+    public function deleteUserRoles(Request $request)
+    {
+        $role = Roles::find($request->id);
+
+        if (!$role) {
+            return $this->sendError('Role not found.');
+        }
+
+        $role->delete();
+
+        return $this->sendResponse('', 'Role deleted successfully.');
+    }
 }

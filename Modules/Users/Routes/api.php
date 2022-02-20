@@ -25,8 +25,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('/create', 'UsersController@createUserRoles');
             Route::get('/view', 'UsersController@getUserRoles');
             Route::put('/edit', 'UsersController@updateUserRoles');
-            //update route for roles
-
+            // Route::delete('/delete', 'UsersController@deleteUserRoles');
         });
     });
 });
