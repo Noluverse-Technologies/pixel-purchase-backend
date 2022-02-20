@@ -5,8 +5,13 @@ namespace Modules\Users\Http\Controllers;
 use Illuminate\Http\Request;
 use Modules\Users\Entities\User;
 
-use Auth;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+
+//use validator facade
+use Illuminate\Support\Facades\Validator;
+
+
+
 use App\Http\Controllers\GenericResponseController;
 use Illuminate\Routing\Controller;
 
@@ -25,6 +30,7 @@ class AuthController extends GenericResponseController
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
 
             $user = Auth::user();
+            
             $success['token'] =  $user->createToken('Nolu')->accessToken;
             $success['name'] =  $user->name;
 
@@ -66,5 +72,17 @@ class AuthController extends GenericResponseController
         $success['name'] =  $user->name;
 
         return $this->sendResponse($success, 'User registered successfully.');
+    }
+
+
+    /**
+     * logout functionaity
+     */
+
+    public function logout(Request $request)
+    {
+        dd($request->user()->token());
+        $request->user()->token()->revoke();
+        return $this->sendResponse('', 'User logged out successfully.');
     }
 }

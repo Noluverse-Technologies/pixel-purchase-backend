@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+
 use Modules\Users\Http\Controllers\AuthController;
 use Modules\Users\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,18 @@ use Modules\Users\Http\Controllers\UsersController;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
+
+
+/**
+ * 
+ */
 Route::group(['middleware' => 'auth:api'], function () {
+
+    Route::get('logout', [AuthController::class, 'logout']);
+
+    //user roles routes
     Route::group(['prefix' => 'role'], function () {
         Route::middleware(['can:create_user_roles'])->group(function () {
-
             Route::post('/create', 'UsersController@createUserRoles');
             Route::get('/view', 'UsersController@getUserRoles');
             Route::put('/edit', 'UsersController@updateUserRoles');
