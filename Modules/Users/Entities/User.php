@@ -32,7 +32,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at'
     ];
+
 
     /**
      * The attributes that should be cast.
@@ -42,4 +45,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+
+    /**
+     * users table relationship with roles table
+     */
+    public function hasOneRole()
+    {
+        return $this->hasMany('Modules\Users\Entities\Role', 'id', 'role');
+    }
 }

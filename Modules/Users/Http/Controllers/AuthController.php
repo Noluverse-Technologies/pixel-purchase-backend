@@ -67,10 +67,4 @@ class AuthController extends GenericResponseController
 
         return $this->sendResponse($success, 'User registered successfully.');
     }
-
-
-    public function adminTest()
-    {
-        dd("into adminnn");
-    }
 }

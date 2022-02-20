@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Modules\Users\Http\Controllers\AuthController;
+use Modules\Users\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +19,14 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::group(['prefix' => 'role'], function () {
+        Route::middleware(['can:create_user_roles'])->group(function () {
 
-    Route::middleware(['can:isSubscribedUser'])->group(function () {
-        Route::get('/admintest', 'AuthController@adminTest');
+            Route::post('/create', 'UsersController@createUserRoles');
+            Route::get('/view', 'UsersController@getUserRoles');
+            Route::put('/edit', 'UsersController@updateUserRoles');
+            //update route for roles
+
+        });
     });
 });
