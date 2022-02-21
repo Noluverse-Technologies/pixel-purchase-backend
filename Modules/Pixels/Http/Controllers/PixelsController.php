@@ -54,19 +54,17 @@ class PixelsController extends GenericResponseController
      */
     public function updatePixelPackage(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:pixel_packages,',
-            'short_name' => 'required|unique:pixel_packages,short_name,' . $request->id,
-            'code' => 'required|unique:pixel_packages,code,' . $request->id,
-            'image' => 'required',
-            'price' => 'required',
-            'currency' => 'required',
-            'expiration_date' => 'required',
-            'is_active' => 'required'
+            'id' => 'required|exists:pixel_packages',
+            'short_name' => 'unique:pixel_packages,short_name,' . $request->id,
+            'code' => 'unique:pixel_packages,code,' . $request->id,
+            'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
         ]);
 
         //if validator failes return error
         if ($validator->fails()) {
+
             return $this->sendError('Validation Error', $validator->errors());
         }
         $input = $request->all();
