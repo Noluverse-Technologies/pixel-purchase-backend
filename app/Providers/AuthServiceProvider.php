@@ -32,8 +32,8 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         //define a author user role 
-        Gate::define('isSubscribed', function ($user) {
-            return $user->role == 2;
+        Gate::define('create_pixels', function ($user) {
+            return $user->role == 1;
         });
 
         // define a editor role 

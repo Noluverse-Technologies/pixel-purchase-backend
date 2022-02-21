@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 use App\Http\Controllers\GenericResponseController;
-use Illuminate\Routing\Controller;
+
 
 
 
@@ -72,7 +72,7 @@ class AuthController extends GenericResponseController
         if (isset($input['image'])) {
             $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
             //save image name to user table
-            $input['image']->move(public_path('images/' . $input['firstname']), $imageName); //moves the image to the public folder
+            $input['image']->move(public_path('images/user_profile_pic/'), $imageName); //moves the image to the public folder
             $input['image'] = $imageName;
         }
 

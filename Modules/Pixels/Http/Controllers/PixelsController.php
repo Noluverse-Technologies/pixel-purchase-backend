@@ -5,75 +5,47 @@ namespace Modules\Pixels\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Modules\Pixels\Entities\PixelPackages;
 
-class PixelsController extends Controller
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\GenericResponseController;
+
+class PixelsController extends GenericResponseController
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        return view('pixels::index');
-    }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
+     * Create a new pixel package
      */
-    public function create()
+    public function createPixelPackage(Request $request)
     {
-        return view('pixels::create');
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:pixel_packages,name',
+            'short_name' => 'required|unique:pixel_packages,short_name',
+            'code' => 'required|unique:pixel_packages,code',
+            'image' => 'required',
+            'price' => 'required',
+            'currency' => 'required',
+            'expiration_date' => 'required',
+            'is_active' => 'required'
+        ]);
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('pixels::show');
-    }
+        //if validator failes return error
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error', $validator->errors());
+        }
+        $input = $request->all();
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('pixels::edit');
-    }
+        if (isset($input['image'])) {
+            $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
+            //save image name to user table
+            $input['image']->move(public_path('images/pixel_packages/'), $imageName); //moves the image to the public folder
+            $input['image'] = $imageName;
+        }
+        //write an update functionality for the pixel packages
+        $pixelPackage = PixelPackages::create($input);
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->sendResponse($pixelPackage, 'Pixel package created successfully.');
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Pixels\Http\Controllers\PixelsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,24 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/pixels', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:api'], function () {
+
+    Route::get('logout', [AuthController::class, 'logout']);
+
+    //user roles routes
+    Route::group(['prefix' => 'pixel'], function () {
+        Route::group(['prefix' => 'package'], function () {
+            Route::middleware(['can:create_pixels'])->group(function () {
+                Route::post('/create', 'PixelsController@createPixelPackage');
+                // Route::get('/view', 'UsersController@getUserRoles');
+                // Route::put('/edit', 'UsersController@updateUserRoles');
+                // Route::delete('/delete', 'UsersController@deleteUserRoles');
+            });
+        });
+    });
+
+    //user routes
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/edit', 'UsersController@updateCurrentUser');
+    });
 });
