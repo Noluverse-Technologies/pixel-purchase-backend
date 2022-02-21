@@ -78,7 +78,7 @@ class AuthController extends GenericResponseController
 
         $user = User::create($input);
 
-        $success['token'] =  $user->createToken('Nolu')->accessToken;
+        // $success['token'] =  $user->createToken('Nolu')->accessToken;
         $success['name'] =  $user->name;
 
         return $this->sendResponse($success, 'User registered successfully.');

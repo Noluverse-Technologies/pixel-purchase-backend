@@ -85,4 +85,70 @@ class UsersController extends GenericResponseController
 
         return $this->sendResponse('', 'Role deleted successfully.');
     }
+
+
+
+    /**
+     * Update user info
+     */
+    public function updateCurrentUser(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:users',
+            'wallet_address' => 'unique:users',
+            'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+        ]);
+
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error', $validator->errors());
+        }
+
+        $input = $request->all();
+
+        //if validator failes return error
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error', $validator->errors());
+        }
+
+        //write an update functionality for the roles field
+        $user = User::find($request->id);
+
+        if (!$user) {
+            return $this->sendError('User not found.');
+        }
+
+        if (isset($input['firstname'])) {
+            $user->firstname = $input['firstname'];
+        }
+
+        if (isset($input['lastname'])) {
+            $user->lastname = $input['lastname'];
+        }
+
+        if (isset($input['wallet_address'])) {
+            $user->wallet_address = $input['wallet_address'];
+        }
+
+        if (isset($input['password'])) {
+            $user->password = bcrypt($input['password']);
+        }
+
+        if (isset($input['image'])) {
+            $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
+            //save image name to user table
+            $input['image']->move(public_path('images/' . $input['firstname']), $imageName); //moves the image to the public folder
+            $input['image'] = $imageName;
+        }
+
+
+        $update = $user->update();
+
+        if ($update) {
+            return $this->sendResponse('', 'User updated successfully.');
+        } else {
+            return $this->sendError('User not updated.');
+        }
+    }
 }

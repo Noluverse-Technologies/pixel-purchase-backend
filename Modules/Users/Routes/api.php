@@ -37,4 +37,9 @@ Route::group(['middleware' => 'auth:api'], function () {
             // Route::delete('/delete', 'UsersController@deleteUserRoles');
         });
     });
+
+    //user routes
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/edit', 'UsersController@updateCurrentUser');
+    });
 });
