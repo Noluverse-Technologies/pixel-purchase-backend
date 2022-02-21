@@ -28,10 +28,11 @@ class PixelsController extends GenericResponseController
             'price' => 'required',
             'currency' => 'required',
             'expiration_date' => 'required',
-            'is_active' => 'required'
+            'is_active' => 'required',
+            'license_id' => 'exists:license_packages,id'
         ]);
 
-        //if validator failes return error
+        //if validator fails return error
         if ($validator->fails()) {
             return $this->sendError('Validation Error', $validator->errors());
         }
@@ -59,10 +60,11 @@ class PixelsController extends GenericResponseController
             'id' => 'required|exists:pixel_packages',
             'short_name' => 'unique:pixel_packages,short_name,' . $request->id,
             'code' => 'unique:pixel_packages,code,' . $request->id,
-            'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'license_id' => 'exists:license_packages,id'
         ]);
 
-        //if validator failes return error
+        //if validator fails return error
         if ($validator->fails()) {
 
             return $this->sendError('Validation Error', $validator->errors());

@@ -51,7 +51,7 @@ class UsersController extends GenericResponseController
             'name' => 'required|unique:roles,name,' . $request->id
         ]);
 
-        //if validator failes return error
+        //if validator fails return error
         if ($validator->fails()) {
             return $this->sendError('Validation Error', $validator->errors());
         }
@@ -102,12 +102,13 @@ class UsersController extends GenericResponseController
 
 
         if ($validator->fails()) {
+            //*generic response function called from GenericResponseController
             return $this->sendError('Validation Error', $validator->errors());
         }
 
         $input = $request->all();
 
-        //if validator failes return error
+        //if validator fails return error
         if ($validator->fails()) {
             return $this->sendError('Validation Error', $validator->errors());
         }
@@ -146,6 +147,7 @@ class UsersController extends GenericResponseController
         $update = $user->update();
 
         if ($update) {
+            // *generic response function called from GenericResponseController
             return $this->sendResponse('', 'User updated successfully.');
         } else {
             return $this->sendError('User not updated.');
