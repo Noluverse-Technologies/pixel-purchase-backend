@@ -48,4 +48,39 @@ class PixelsController extends GenericResponseController
 
         return $this->sendResponse($pixelPackage, 'Pixel package created successfully.');
     }
+
+    /**
+     * Update a pixel package
+     */
+    public function updatePixelPackage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:pixel_packages,',
+            'short_name' => 'required|unique:pixel_packages,short_name,' . $request->id,
+            'code' => 'required|unique:pixel_packages,code,' . $request->id,
+            'image' => 'required',
+            'price' => 'required',
+            'currency' => 'required',
+            'expiration_date' => 'required',
+            'is_active' => 'required'
+        ]);
+
+        //if validator failes return error
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error', $validator->errors());
+        }
+        $input = $request->all();
+
+        if (isset($input['image'])) {
+            $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
+            //save image name to user table
+            $input['image']->move(public_path('images/pixel_packages/'), $imageName); //moves the image to the public folder
+            $input['image'] = $imageName;
+        }
+        //write an update functionality for the pixel packages
+        $pixelPackage = PixelPackages::find($request->id);
+        $pixelPackage->update($input);
+
+        return $this->sendResponse($pixelPackage, 'Pixel package updated successfully.');
+    }
 }

@@ -22,16 +22,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'pixel'], function () {
         Route::group(['prefix' => 'package'], function () {
             Route::middleware(['can:create_pixels'])->group(function () {
-                Route::post('/create', 'PixelsController@createPixelPackage');
-                // Route::get('/view', 'UsersController@getUserRoles');
-                // Route::put('/edit', 'UsersController@updateUserRoles');
-                // Route::delete('/delete', 'UsersController@deleteUserRoles');
+                Route::post('/create', [PixelsController::class, 'createPixelPackage']);
+                Route::post('/edit', [PixelsController::class, 'updatePixelPackage']);
             });
         });
-    });
-
-    //user routes
-    Route::group(['prefix' => 'user'], function () {
-        Route::post('/edit', 'UsersController@updateCurrentUser');
     });
 });

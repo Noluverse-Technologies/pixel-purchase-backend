@@ -26,18 +26,18 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('logout', [AuthController::class, 'logout']);
 
+
     //user roles routes
     Route::group(['prefix' => 'role'], function () {
         Route::middleware(['can:create_user_roles'])->group(function () {
-            Route::post('/create', 'UsersController@createUserRoles');
-            Route::get('/view', 'UsersController@getUserRoles');
-            Route::put('/edit', 'UsersController@updateUserRoles');
-            // Route::delete('/delete', 'UsersController@deleteUserRoles');
+            Route::post('/create', [UsersController::class, 'createUserRoles']);
+            Route::post('/view', [UsersController::class, 'getUserRoles']);
+            Route::post('/edit', [UsersController::class, 'updateUserRoles']);
         });
     });
 
     //user routes
     Route::group(['prefix' => 'user'], function () {
-        Route::post('/edit', 'UsersController@updateCurrentUser');
+        Route::post('/edit', [UsersController::class, 'updateCurrentUser']);
     });
 });
