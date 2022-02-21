@@ -30,7 +30,7 @@ class AuthController extends GenericResponseController
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
 
             $user = Auth::user();
-            
+
             $success['token'] =  $user->createToken('Nolu')->accessToken;
             $success['name'] =  $user->name;
 
@@ -48,9 +48,12 @@ class AuthController extends GenericResponseController
     {
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
             'email' => 'required|email|unique:users',
+            'wallet_address' => 'required|unique:users',
             'password' => 'required',
+            'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'role' => 'required',
             'c_password' => 'required|same:password',
         ]);
@@ -62,13 +65,20 @@ class AuthController extends GenericResponseController
 
         $input = $request->all();
 
+
         //hashes the password
         $input['password'] = bcrypt($input['password']);
 
+        if (isset($input['image'])) {
+            $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
+            //save image name to user table
+            $input['image']->move(public_path('images/' . $input['firstname']), $imageName); //moves the image to the public folder
+            $input['image'] = $imageName;
+        }
+
         $user = User::create($input);
 
-
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
+        $success['token'] =  $user->createToken('Nolu')->accessToken;
         $success['name'] =  $user->name;
 
         return $this->sendResponse($success, 'User registered successfully.');
