@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'role'], function () {
         Route::middleware(['can:create_user_roles'])->group(function () {
             Route::post('/create', [UsersController::class, 'createUserRoles']);
-            Route::post('/view', [UsersController::class, 'getUserRoles']);
+            Route::get('/view', [UsersController::class, 'getUserRoles']);
             Route::post('/edit', [UsersController::class, 'updateUserRoles']);
         });
     });

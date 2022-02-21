@@ -76,7 +76,7 @@ class PixelsController extends GenericResponseController
             $input['image'] = $imageName;
         }
         //write an update functionality for the pixel packages
-        $pixelPackage = PixelPackages::find($request->id);
+        $pixelPackage = PixelPackages::find($input['id']);
         $pixelPackage->update($input);
 
         return $this->sendResponse($pixelPackage, 'Pixel package updated successfully.');
