@@ -9,17 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 //use validator facade
 use Illuminate\Support\Facades\Validator;
-
-
-
 use App\Http\Controllers\GenericResponseController;
-
-
 
 
 class AuthController extends GenericResponseController
 {
-
 
     /**
      * User login functionality.

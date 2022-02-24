@@ -44,7 +44,7 @@ class PixelsController extends GenericResponseController
             $input['image']->move(public_path('images/pixel_packages/'), $imageName); //moves the image to the public folder
             $input['image'] = $imageName;
         }
-        //write an update functionality for the pixel packages
+        
         $pixelPackage = PixelPackages::create($input);
 
         return $this->sendResponse($pixelPackage, 'Pixel package created successfully.');
