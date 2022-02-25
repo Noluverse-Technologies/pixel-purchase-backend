@@ -26,8 +26,7 @@ class PixelsController extends GenericResponseController
             'price' => 'required',
             'currency' => 'required',
             'expiration_date' => 'required',
-            'is_active' => 'required',
-            'license_id' => 'exists:license_packages,id'
+            'is_active' => 'required'
         ]);
 
         //if validator fails return error

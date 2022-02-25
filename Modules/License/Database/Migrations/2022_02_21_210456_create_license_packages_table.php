@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CreateLicensePackagesTable extends Migration
 {
@@ -26,6 +27,7 @@ class CreateLicensePackagesTable extends Migration
             $table->string('expiration_date');
             $table->integer('pixel_id')->nullable();
             $table->boolean('is_active')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
