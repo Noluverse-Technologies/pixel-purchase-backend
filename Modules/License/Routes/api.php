@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\License\Http\Controllers\LicenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/license', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:api'], function () {
+
+    //pixel routes
+    Route::group(['prefix' => 'license'], function () {
+        Route::group(['prefix' => 'package'], function () {
+            Route::get('/view', [LicenseController::class, 'getLicensePackages']);
+            Route::middleware(['can:create_license_pixels'])->group(function () {
+                Route::post('/create', [LicenseController::class, 'createLicensePackage']);
+                Route::post('/edit', [LicenseController::class, 'updatePixelPackage']);
+            });
+        });
+    });
 });

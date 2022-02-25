@@ -2,10 +2,8 @@
 
 namespace Modules\Pixels\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Modules\Pixels\Entities\PixelPackages;
 
 use Illuminate\Support\Facades\Validator;
@@ -44,7 +42,7 @@ class PixelsController extends GenericResponseController
             $input['image']->move(public_path('images/pixel_packages/'), $imageName); //moves the image to the public folder
             $input['image'] = $imageName;
         }
-        
+
         $pixelPackage = PixelPackages::create($input);
 
         return $this->sendResponse($pixelPackage, 'Pixel package created successfully.');
@@ -82,5 +80,14 @@ class PixelsController extends GenericResponseController
         $pixelPackage->update($input);
 
         return $this->sendResponse($pixelPackage, 'Pixel package updated successfully.');
+    }
+
+    /**
+     * Get all pixel packages
+     */
+    public function getPixelPackages()
+    {
+        $pixelPackages = PixelPackages::all();
+        return $this->sendResponse($pixelPackages, 'Pixel packages retrieved successfully.');
     }
 }

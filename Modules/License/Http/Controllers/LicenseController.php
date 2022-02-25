@@ -2,11 +2,11 @@
 
 namespace Modules\License\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\GenericResponseController;
 
-class LicenseController extends Controller
+class LicenseController extends GenericResponseController
 {
     /**
      * *Create License Package
@@ -42,5 +42,41 @@ class LicenseController extends Controller
         $licensePackage = LicensePackages::create($input);
 
         return $this->sendResponse($licensePackage, 'License package created successfully.');
+    }
+
+
+    /**
+     * *Update License Package
+     */
+    public function updateLicensePackage(Request $request, $id)
+    {
+        $licensePackage = LicensePackages::find($id);
+
+        if (is_null($licensePackage)) {
+            return $this->sendError('License Package not found.');
+        }
+
+        $input = $request->all();
+
+        if (isset($input['image'])) {
+            $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
+            //save image name to user table
+            $input['image']->move(public_path('images/license_packages/'), $imageName); //moves the image to the public folder
+            $input['image'] = $imageName;
+        }
+
+        $licensePackage->update($input);
+
+        return $this->sendResponse($licensePackage, 'License package updated successfully.');
+    }
+
+
+    /**
+     * *Get License Package
+     */
+    public function getLicensePackages()
+    {
+        $licensePackages = LicensePackages::all();
+        return $this->sendResponse($licensePackages, 'License Packages retrieved successfully.');
     }
 }

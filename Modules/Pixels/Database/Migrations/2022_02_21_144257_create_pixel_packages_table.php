@@ -17,7 +17,8 @@ class CreatePixelPackagesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('short_name');
-            $table->string('code')->unique();
+            $table->string('code')->unique()->comment('this is the pixel unique id');;
+            $table->string('type')->nullable();
             $table->string('image')->nullable();
             $table->unsignedDecimal('price')->default(0);
             $table->string('currency')->default('USD');

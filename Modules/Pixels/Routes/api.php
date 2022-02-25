@@ -16,12 +16,11 @@ use Modules\Pixels\Http\Controllers\PixelsController;
 
 Route::group(['middleware' => 'auth:api'], function () {
 
-    Route::get('logout', [AuthController::class, 'logout']);
-
-    //user roles routes
+    //pixel routes
     Route::group(['prefix' => 'pixel'], function () {
         Route::group(['prefix' => 'package'], function () {
-            Route::middleware(['can:create_pixels'])->group(function () {
+            Route::get('/view', [PixelsController::class, 'getPixelPackages']);
+            Route::middleware(['can:create_license_pixels'])->group(function () {
                 Route::post('/create', [PixelsController::class, 'createPixelPackage']);
                 Route::post('/edit', [PixelsController::class, 'updatePixelPackage']);
             });

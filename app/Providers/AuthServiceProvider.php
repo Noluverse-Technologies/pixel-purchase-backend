@@ -32,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         //define a author user role 
-        Gate::define('create_pixels', function ($user) {
+        Gate::define('create_license_pixels', function ($user) {
             return $user->role == 1;
         });
 
