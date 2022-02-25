@@ -26,7 +26,7 @@ class CreateLicensePackagesTable extends Migration
             $table->string('currency')->default('USD');
             $table->string('expiration_date');
             $table->integer('pixel_id')->nullable();
-            $table->boolean('is_active')->default(1);
+            $table->boolean('is_active')->default(1)->comment('1 = active, 0 = inactive  (this filed is to control to deactivate license from the system)');
             $table->softDeletes();
             $table->timestamps();
         });

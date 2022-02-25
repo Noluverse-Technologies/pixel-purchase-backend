@@ -20,7 +20,8 @@ class LicensePackages extends Model
         "currency",
         "expiration_date",
         "is_active",
-        "pixel_id"
+        "pixel_id",
+        "is_eligible_to_purchase",
     ];
 
     protected $hidden = ["created_at", "updated_at", "deleted_at"];

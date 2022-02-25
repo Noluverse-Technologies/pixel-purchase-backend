@@ -57,10 +57,6 @@ class LicenseController extends GenericResponseController
             'short_name' => 'unique:license_packages,short_name,' . $request->id,
             'code' => 'unique:license_packages,code,' . $request->id,
             'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'price' => 'required',
-            'currency' => 'required',
-            'expiration_date' => 'required',
-            'is_active' => 'required',
             'pixel_id' => 'exists:pixel_packages,id'
         ]);
 

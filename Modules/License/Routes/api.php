@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('/view', [LicenseController::class, 'getLicensePackages']);
             Route::middleware(['can:create_license_pixels'])->group(function () {
                 Route::post('/create', [LicenseController::class, 'createLicensePackage']);
-                Route::post('/edit', [LicenseController::class, 'updatePixelPackage']);
+                Route::post('/edit', [LicenseController::class, 'updateLicensePackage']);
             });
         });
     });
