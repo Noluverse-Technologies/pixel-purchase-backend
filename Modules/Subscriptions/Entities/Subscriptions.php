@@ -1,0 +1,39 @@
+<?php
+
+namespace Modules\Subscriptions\Entities;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Subscriptions extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'pixel_id',
+        'user_id',
+        'license_id',
+        'pixel_purchase_date',
+        'license_purchase_date',
+        'withdrawal_amount_is_paid',
+        'has_expired',
+        'nolu_reward_amount',
+        'last_reward_amount',
+
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    /**
+     * Subscription belongs to user
+     */
+    public function hasUser()
+    {
+        return $this->belongsTo('Modules\Users\Entities\Users', 'user_id');
+    }
+}

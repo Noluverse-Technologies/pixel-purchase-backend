@@ -2,5 +2,6 @@
     "Authentication": true,
     "Users": true,
     "Pixels": true,
-    "License": true
+    "License": true,
+    "Subscriptions": true
 }

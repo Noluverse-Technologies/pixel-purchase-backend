@@ -22,7 +22,7 @@ class CreatePixelPackagesTable extends Migration
             $table->string('image')->nullable();
             $table->unsignedDecimal('price')->default(0);
             $table->string('currency')->default('USD');
-            $table->string('expiration_date');
+            $table->integer('duration_in_days')->default(-1)->comment('-1 means unlimited');
             $table->boolean('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

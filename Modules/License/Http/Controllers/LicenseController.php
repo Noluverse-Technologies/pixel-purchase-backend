@@ -21,10 +21,13 @@ class LicenseController extends GenericResponseController
             'code' => 'required|unique:license_packages,code',
             'image' => 'required',
             'price' => 'required',
+            'type' => 'required',
+            'reward_amount' => 'required',
+            'withdrawal_fee' => 'required',
             'currency' => 'required',
-            'expiration_date' => 'required',
+            'duration_in_days' => 'required',
             'is_active' => 'required',
-            'pixel_id' => 'exists:pixel_packages,id'
+            'pixel_id' => 'exists:pixel_packages,id',
         ]);
 
         //if validator fails return error
