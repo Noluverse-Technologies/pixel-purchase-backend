@@ -37,8 +37,8 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         // define a editor role 
-        Gate::define('isNonSubscribed', function ($user) {
-            return $user->role == 3;
+        Gate::define('can_manage_user_subscription', function ($user) {
+            return $user->role == 1;
         });
     }
 }

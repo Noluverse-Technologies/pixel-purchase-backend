@@ -19,7 +19,7 @@ class Subscriptions extends Model
         'withdrawal_amount_is_paid',
         'has_expired',
         'nolu_reward_amount',
-        'last_reward_amount',
+        'usdt_reward_amount',
 
     ];
 

@@ -2,78 +2,79 @@
 
 namespace Modules\Subscriptions\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\GenericResponseController;
+use Modules\Subscriptions\Entities\SubscriptionType;
 
-class SubscriptionsController extends Controller
+class SubscriptionsController extends GenericResponseController
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+
+
+    //create subscription type 
+    public function createSubscriptionType(Request $request)
     {
-        return view('subscriptions::index');
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:subscription_types,name',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $subscriptionType = SubscriptionType::create($request->all());
+
+        return $this->sendResponse($subscriptionType, 'Subscription type created successfully.');
+    }
+
+
+    //*update subscription type
+    public function updateSubscriptionType(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:subscription_types',
+            'name' => 'required|unique:subscription_types,name,' . $request->id,
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $subscriptionType = SubscriptionType::find($request->id);
+        $subscriptionType->update($request->all());
+
+        return $this->sendResponse($subscriptionType, 'Subscription type updated successfully.');
+    }
+
+
+    function getSubscriptionByUser($id)
+    {
+        dd($id);
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
+     * create user subscription
      */
-    public function create()
+    function createSubscription(Request $request)
     {
-        return view('subscriptions::create');
+
+        $validator = Validator::make($request->all(), [
+            'pixel_id' => 'required|unique:pixel_packages,name',
+            'user_id' => 'required|unique:pixel_packages,short_name',
+            'license_id' => 'unique:license_packages,code',
+            'pixel_purchase_date' => 'required',
+            'withdrawal_amount_is_paid' => 'required',
+            'has_expired' => 'required'
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     * get all subscriptions
      */
-    public function store(Request $request)
+    function getAllSubscriptions()
     {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('subscriptions::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('subscriptions::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        dd("all");
     }
 }
