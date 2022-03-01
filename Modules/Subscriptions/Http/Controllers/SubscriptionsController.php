@@ -155,10 +155,23 @@ class SubscriptionsController extends GenericResponseController
     /**
      * Expire all subscriptions where licence date is greater than or equal to license duration in days
      */
-    function expireSubscriptions()
+    function expireAllExpiredSubscriptions()
     {
         //get all subscriptions where license id is not null and license purchase date is greater than or equal to license duration in days
         $subscriptions = Subscriptions::where('license_id', '!=', null)->where('license_expiration_date', '>=', Carbon::now())->get();
+
+        //expire all subscriptions
+        foreach ($subscriptions as $subscription) {
+            $subscription->has_expired = 1;
+            $subscription->save();
+        }
+    }
+
+    //expire all subscriptions by user id
+    function expireAllExpiredSubscriptionsByUser(Request $request)
+    {
+        //get all subscriptions where license id is not null and license purchase date is greater than or equal to license duration in days
+        $subscriptions = Subscriptions::where('license_id', '!=', null)->where('user_id', $request->user_id)->where('license_expiration_date', '>=', Carbon::now())->get();
 
         //expire all subscriptions
         foreach ($subscriptions as $subscription) {
