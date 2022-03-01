@@ -24,6 +24,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/view_user_subscription/{id}', [SubscriptionsController::class, 'getSubscriptionByUser']);
         Route::get('/view_all_subscription', [SubscriptionsController::class, 'getAllSubscriptions']);
         Route::post('/create', [SubscriptionsController::class, 'createSubscription']);
+        Route::post('/edit', [SubscriptionsController::class, 'updateSubscription']);
 
         //subscribed type routes
         Route::group(['prefix' => 'type'], function () {
@@ -32,6 +33,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::middleware(['can:can_manage_user_subscription'])->group(function () {
                 Route::post('/create', [SubscriptionsController::class, 'createSubscriptionType']);
                 Route::post('/edit', [SubscriptionsController::class, 'updateSubscriptionType']);
+                Route::get('/view', [SubscriptionsController::class, 'getAllSubscriptionType']);
             });
         });
     });

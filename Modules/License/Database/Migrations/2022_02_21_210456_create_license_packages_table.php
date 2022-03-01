@@ -20,11 +20,10 @@ class CreateLicensePackagesTable extends Migration
             $table->string('short_name');
             $table->string('code')->unique()->comment('this is the license unique id');
             $table->string('type')->nullable();
-            $table->integer('duration')->default(0);
             $table->string('image')->nullable();
             $table->unsignedDecimal('price')->default(0);
             $table->string('currency')->default('USD');
-            $table->string('duratoin_in_days')->default(0);
+            $table->string('duration_in_days')->default(0);
             $table->unsignedDecimal('reward_amount')->default(0);
             $table->unsignedDecimal('withdrawal_fee')->default(0);
             $table->integer('pixel_id')->nullable();

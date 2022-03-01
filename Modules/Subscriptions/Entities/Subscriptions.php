@@ -20,6 +20,9 @@ class Subscriptions extends Model
         'has_expired',
         'nolu_reward_amount',
         'usdt_reward_amount',
+        'subsctiption_type_id',
+        'license_duration',
+        'license_expiration_date'
 
     ];
 

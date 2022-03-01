@@ -18,13 +18,12 @@ class LicensePackages extends Model
         "image",
         "price",
         "currency",
-        "duratoin_in_days",
+        "duration_in_days",
         "is_active",
         "pixel_id",
         "is_eligible_to_purchase",
         "reward_amount",
         "withdrawal_fee",
-        "duratoin_in_days",
         "type"
     ];
 

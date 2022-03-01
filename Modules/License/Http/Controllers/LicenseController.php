@@ -14,7 +14,7 @@ class LicenseController extends GenericResponseController
      */
     public function createLicensePackage(Request $request)
     {
-
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:license_packages,name',
             'short_name' => 'required|unique:license_packages,short_name',
@@ -68,7 +68,7 @@ class LicenseController extends GenericResponseController
             return $this->sendError('Validation Error', $validator->errors());
         }
         $input = $request->all();
-
+        // dd($input["duration_in_days"]);
         if (isset($input['image'])) {
             $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
             //save image name to user table

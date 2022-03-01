@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use Passport;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -25,6 +26,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        //below code force expires the token after 1 hour
+        Passport::routes();
+        // Passport::tokensExpireIn(Carbon::now()->addSeconds(20));
+        Passport::personalAccessTokensExpireIn(Carbon::now()->addHours(2));
+        Passport::refreshTokensExpireIn(Carbon::now()->addHours(2));
 
         // define a admin user role 
         Gate::define('create_user_roles', function ($user) {

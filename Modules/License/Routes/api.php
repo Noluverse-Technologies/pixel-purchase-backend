@@ -21,8 +21,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::group(['prefix' => 'package'], function () {
             Route::get('/view', [LicenseController::class, 'getLicensePackages']);
             Route::middleware(['can:create_license_pixels'])->group(function () {
-                Route::post('/create', [LicenseController::class, 'createLicensePackage']);
-                Route::post('/edit', [LicenseController::class, 'updateLicensePackage']);
+                Route::post('/create', [LicenseController::class, 'createLicensePackage'])->name('create');
+                Route::post('/edit', [LicenseController::class, 'updateLicensePackage'])->name('edit');
             });
         });
     });
