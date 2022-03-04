@@ -26,7 +26,7 @@ class AuthController extends GenericResponseController
             $user = Auth::user();
 
             $success['token'] =  $user->createToken('Nolu')->accessToken;
-            $success['name'] =  $user->name;
+            $success['info'] =  $user;
 
             return $this->sendResponse($success, 'User logged in successfully.');
         } else {
