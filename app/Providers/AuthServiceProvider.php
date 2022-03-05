@@ -28,9 +28,9 @@ class AuthServiceProvider extends ServiceProvider
 
         //below code force expires the token after 1 hour
         Passport::routes();
-        // Passport::tokensExpireIn(Carbon::now()->addSeconds(20));
-        Passport::personalAccessTokensExpireIn(Carbon::now()->addHours(2));
-        Passport::refreshTokensExpireIn(Carbon::now()->addHours(2));
+        // Passport::tokensExpireIn(Carbon::now()->addSeconds(200));
+        // Passport::personalAccessTokensExpireIn(Carbon::now()->addHours(200));
+        // Passport::refreshTokensExpireIn(Carbon::now()->addHours(200));
 
         // define a admin user role 
         Gate::define('create_user_roles', function ($user) {

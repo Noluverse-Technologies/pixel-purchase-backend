@@ -24,6 +24,9 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 
 Route::group(['middleware' => 'auth:api'], function () {
 
+
+
+    Route::get('/useinfo', [AuthController::class, 'getUserInfo']);
     Route::get('logout', [AuthController::class, 'logout']);
 
 

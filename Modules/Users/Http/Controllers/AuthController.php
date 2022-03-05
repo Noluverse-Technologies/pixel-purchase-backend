@@ -21,7 +21,9 @@ class AuthController extends GenericResponseController
      */
     public function login(Request $request)
     {
+
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+
 
             $user = Auth::user();
 
@@ -32,6 +34,19 @@ class AuthController extends GenericResponseController
         } else {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
+    }
+
+
+    /**
+     * get user information by id
+     */
+
+    public function getUserInfo(Request $request)
+    {
+        $id = Auth::user()->id;
+        $userInfo = User::with('hasRole')->where('id', $id)->get();
+
+        return $this->sendResponse($userInfo, 'User logged in successfully.');
     }
 
     /**

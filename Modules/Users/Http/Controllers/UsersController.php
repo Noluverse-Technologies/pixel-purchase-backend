@@ -96,7 +96,6 @@ class UsersController extends GenericResponseController
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:users',
-            'wallet_address' => 'unique:users',
             'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
         ]);
 
@@ -129,6 +128,7 @@ class UsersController extends GenericResponseController
         }
 
         if (isset($input['wallet_address'])) {
+
             $user->wallet_address = $input['wallet_address'];
         }
 
@@ -138,9 +138,14 @@ class UsersController extends GenericResponseController
 
         if (isset($input['image'])) {
             $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
+            // dd($imageName);
             //save image name to user table
-            $input['image']->move(public_path('images/' . $input['firstname']), $imageName); //moves the image to the public folder
+
+
+            $input['image']->move(public_path('images/user_profile_pic/'), $imageName); //moves the image to the public folder
+
             $input['image'] = $imageName;
+            $user->image = $input['image'];
         }
 
 
