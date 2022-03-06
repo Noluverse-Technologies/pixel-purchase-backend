@@ -60,7 +60,6 @@ class AuthController extends GenericResponseController
             'firstname' => 'required',
             'lastname' => 'required',
             'email' => 'required|email|unique:users',
-            'wallet_address' => 'unique:users',
             'password' => 'required',
             'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'role' => 'required',
