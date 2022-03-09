@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\GenericResponseController;
 use Modules\License\Entities\LicensePackages;
+use Modules\Pixels\Entities\PixelPackages;
 
 class LicenseController extends GenericResponseController
 {
@@ -43,7 +44,13 @@ class LicenseController extends GenericResponseController
             $input['image'] = $imageName;
         }
 
+
+
         $licensePackage = LicensePackages::create($input);
+        $getPixels = PixelPackages::where('id', $input["pixel_id"])->first();
+        $getPixels['license_id'] = $licensePackage->id;
+        $getPixels->save();
+
 
         return $this->sendResponse($licensePackage, 'License package created successfully.');
     }

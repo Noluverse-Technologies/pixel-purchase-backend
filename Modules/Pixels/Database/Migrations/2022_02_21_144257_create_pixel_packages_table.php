@@ -23,6 +23,7 @@ class CreatePixelPackagesTable extends Migration
             $table->unsignedDecimal('price')->default(0);
             $table->string('currency')->default('USD');
             $table->integer('duration_in_days')->default(-1)->comment('-1 means unlimited');
+            $table->integer('license_id')->nullable();
             $table->boolean('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

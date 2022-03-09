@@ -25,7 +25,7 @@ class PixelsController extends GenericResponseController
             'image' => 'required',
             'price' => 'required',
             'currency' => 'required',
-            'expiration_date' => 'required',
+            'license_id' => 'exists:license_packages,id',
             'is_active' => 'required'
         ]);
 
