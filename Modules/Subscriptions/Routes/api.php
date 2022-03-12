@@ -22,8 +22,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'subscribe'], function () {
         //subscribe parent level routes
         Route::get('/view_user_subscription/{id}', [SubscriptionsController::class, 'getSubscriptionByUser']);
+
+        Route::get('/view_all_subscription_by_user/{id}', [SubscriptionsController::class, 'getAllUserSubscriptionById']);
+
         Route::get('/view_all_subscription', [SubscriptionsController::class, 'getAllSubscriptions']);
+
         Route::post('/create', [SubscriptionsController::class, 'createSubscription']);
+
         Route::post('/edit', [SubscriptionsController::class, 'updateSubscription']);
 
         //subscribed type routes

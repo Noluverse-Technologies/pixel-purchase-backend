@@ -63,7 +63,14 @@ class SubscriptionsController extends GenericResponseController
 
     function getSubscriptionByUser($id)
     {
-        $subscription = Subscriptions::where('user_id', $id)->paginate(10);
+        $subscription = Subscriptions::with('hasPixel')->where('user_id', $id)->paginate(10);
+
+        return $this->sendResponse($subscription, 'Subscription retrieved successfully.');
+    }
+
+    function getAllUserSubscriptionById($id)
+    {
+        $subscription = Subscriptions::with('hasPixel')->where('user_id', $id)->get();
 
         return $this->sendResponse($subscription, 'Subscription retrieved successfully.');
     }
@@ -77,10 +84,9 @@ class SubscriptionsController extends GenericResponseController
         $validator = Validator::make($request->all(), [
             'pixel_id' => 'required|exists:pixel_packages,id',
             'user_id' => 'required|exists:users,id',
-            'subsctiption_type_id' => 'required|exists:subscription_types,id',
+            'subsctiption_type' => 'required|exists:users,user_type',
             'license_id' => 'exists:license_packages,id',
             'withdrawal_amount_is_paid' => 'required',
-            'has_expired' => 'required'
         ]);
 
 

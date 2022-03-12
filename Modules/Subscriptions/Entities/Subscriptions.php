@@ -20,7 +20,7 @@ class Subscriptions extends Model
         'has_expired',
         'nolu_reward_amount',
         'usdt_reward_amount',
-        'subsctiption_type_id',
+        'subsctiption_type',
         'license_duration',
         'license_expiration_date'
 
@@ -38,5 +38,13 @@ class Subscriptions extends Model
     public function hasUser()
     {
         return $this->belongsTo('Modules\Users\Entities\Users', 'user_id');
+    }
+
+    /**
+     * Subscription belongs to pixels
+     */
+    public function hasPixel()
+    {
+        return $this->belongsTo('Modules\Pixels\Entities\PixelPackages', 'pixel_id');
     }
 }

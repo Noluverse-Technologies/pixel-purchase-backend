@@ -23,7 +23,8 @@ class User extends Authenticatable
         'wallet_address',
         'password',
         'role',
-        'image'
+        'image',
+        'user_type'
     ];
 
     /**

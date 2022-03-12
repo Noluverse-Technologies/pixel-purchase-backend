@@ -76,6 +76,7 @@ class AuthController extends GenericResponseController
 
         //hashes the password
         $input['password'] = bcrypt($input['password']);
+        $input['user_type'] = "nolu";
 
         if (isset($input['image'])) {
             $imageName = time() . '.' . $input['image']->extension();  //creates the image name with extension
