@@ -52,7 +52,6 @@ class User extends Authenticatable
     ];
 
 
-
     /**
      * users table relationship with roles table
      */

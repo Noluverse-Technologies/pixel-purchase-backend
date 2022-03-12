@@ -3,5 +3,6 @@
     "Users": true,
     "Pixels": true,
     "License": true,
-    "Subscriptions": true
+    "Subscriptions": true,
+    "Payment": true
 }
