@@ -59,4 +59,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('Modules\Users\Entities\Roles', 'id', 'role');
     }
+
+    /**
+     * users table relationship with transaction table
+     */
+    public function hasTransaction()
+    {
+        return $this->hasMany('Modules\Payment\Entities\Transactions', 'user_id', 'id');
+    }
 }

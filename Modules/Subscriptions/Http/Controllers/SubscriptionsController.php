@@ -84,7 +84,7 @@ class SubscriptionsController extends GenericResponseController
         $validator = Validator::make($request->all(), [
             'pixel_id' => 'required|exists:pixel_packages,id',
             'user_id' => 'required|exists:users,id',
-            'subsctiption_type' => 'required|exists:users,user_type',
+            'subscription_type' => 'required|exists:users,user_type',
             'license_id' => 'exists:license_packages,id',
             'withdrawal_amount_is_paid' => 'required',
         ]);

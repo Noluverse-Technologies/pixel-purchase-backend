@@ -18,7 +18,7 @@ class CreateSubscriptionsTable extends Migration
             $table->id();
             $table->string('pixel_id');
             $table->string('user_id');
-            $table->string('subsctiption_type');
+            $table->string('subscription_type');
             $table->string('license_id')->default(0);
             $table->string('pixel_purchase_date')->nullable();
             $table->string('license_purchase_date')->nullable();

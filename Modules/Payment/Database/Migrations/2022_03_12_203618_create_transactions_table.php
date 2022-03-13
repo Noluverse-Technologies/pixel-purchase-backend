@@ -11,12 +11,16 @@ class CreateTransactionsTable extends Migration
      *
      * @return void
      */
-    public function up() 
+    public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-
+            $table->string('type')->nullable();
+            $table->string('date')->nullable();
+            $table->decimal('amount')->nullable();
+            $table->integer('user_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
