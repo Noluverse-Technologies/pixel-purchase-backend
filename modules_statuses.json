@@ -4,5 +4,6 @@
     "Pixels": true,
     "License": true,
     "Subscriptions": true,
-    "Payment": true
+    "Payment": true,
+    "Overview": true
 }
