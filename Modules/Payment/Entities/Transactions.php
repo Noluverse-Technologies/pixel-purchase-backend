@@ -10,7 +10,15 @@ class Transactions extends Model
     use HasFactory;
 
     protected $fillable = [
-        "type", "date", "amount", "user_id"
+        'type', 'is_pixel_purchased', 'is_license_purchased',
+        'is_withdrawal_amount_paid',
+        'is_reward_claimed',
+        'pixel_amount',
+        'license_amount',
+        'withdrawal_fee_amount',
+        'reward_claimed_amount',
+        'user_id',
+        'date'
     ];
 
     protected $hidden = [

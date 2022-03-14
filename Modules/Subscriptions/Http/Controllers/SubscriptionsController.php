@@ -11,6 +11,8 @@ use Modules\Subscriptions\Entities\Subscriptions;
 use Modules\Subscriptions\Entities\SubscriptionType;
 use Illuminate\Support\Carbon;
 use Modules\License\Entities\LicensePackages;
+use Modules\Payment\Entities\Transactions;
+use Modules\Pixels\Entities\PixelPackages;
 
 class SubscriptionsController extends GenericResponseController
 {
@@ -91,6 +93,7 @@ class SubscriptionsController extends GenericResponseController
 
 
 
+
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
@@ -112,6 +115,75 @@ class SubscriptionsController extends GenericResponseController
         }
 
         $subscription = Subscriptions::create($input);
+
+        $getCreatedSubscription = Subscriptions::find($subscription->id);
+
+
+        if ($getCreatedSubscription->pixel_id) {
+            if ($getCreatedSubscription->license_id) {
+                /**
+                 * !THIS DATE COMPARISON IS NOT WORKING
+                 */
+                if ($getCreatedSubscription->pixel_purschase_date == $getCreatedSubscription->license_purcahse_date) {
+
+                    //both pixel and license is purchased at the same time
+
+                    $licenseAmount = LicensePackages::where('id', $getCreatedSubscription->license_id)->first();
+
+                    $getPixelAmount = PixelPackages::where('id', $getCreatedSubscription->pixel_id)->first();
+
+                    $transactionObject = [
+                        'type' => 1,
+                        'is_pixel_purchased' => 1,
+                        'is_license_purchased' => 1,
+                        'is_withdrawal_amount_paid' => 0,
+                        'is_reward_claimed' => 0,
+                        'pixel_amount' => $getPixelAmount->price,
+                        'license_amount' => $licenseAmount->price,
+                        'user_id' => $getCreatedSubscription->user_id,
+                        'date' => Carbon::now()->addSecond(10)
+                    ];
+
+                    $saveTransaction = Transactions::create($transactionObject);
+                } else {
+                    //only license is purchased
+
+                    //get the license amount
+                    $licenseAmount = LicensePackages::where('id', $getCreatedSubscription->license_id)->first();
+
+
+                    $transactionObject = [
+                        'type' => 1,
+                        'is_pixel_purchased' => 0,
+                        'is_license_purchased' => 1,
+                        'is_withdrawal_amount_paid' => 0,
+                        'is_reward_claimed' => 0,
+                        'license_amount' => $licenseAmount->price,
+                        'user_id' => $getCreatedSubscription->user_id,
+                        'date' => Carbon::now()->addSecond(10)
+                    ];
+
+                    $saveTransaction = Transactions::create($transactionObject);
+                }
+            } else {
+                //only pixel purchased
+                $getPixelAmount = PixelPackages::where('id', $getCreatedSubscription->pixel_id)->first();
+
+                // dd($getPixelAmount->price);
+                $transactionObject = [
+                    'type' => 1,
+                    'is_pixel_purchased' => 1,
+                    'is_license_purchased' => 0,
+                    'is_withdrawal_amount_paid' => 0,
+                    'is_reward_claimed' => 0,
+                    'pixel_amount' => $getPixelAmount->price,
+                    'user_id' => $getCreatedSubscription->user_id,
+                    'date' => Carbon::now()->addSecond(10)
+                ];
+
+                $saveTransaction = Transactions::create($transactionObject);
+            }
+        }
 
         return $this->sendResponse($subscription, 'Subscription type created successfully.');
     }
@@ -143,6 +215,79 @@ class SubscriptionsController extends GenericResponseController
         $subscription = Subscriptions::find($request->id);
 
         $subscription->update($input);
+
+
+
+
+        $getCreatedSubscription = Subscriptions::find($subscription->id);
+
+
+        if ($getCreatedSubscription->pixel_id) {
+            if ($getCreatedSubscription->license_id) {
+                /**
+                 * !THIS DATE COMPARISON IS NOT WORKING
+                 */
+                if ($getCreatedSubscription->pixel_purschase_date->eq($getCreatedSubscription->license_purcahse_date)) {
+                    dd("both sme");
+                    //both pixel and license is purchased at the same time
+
+                    $licenseAmount = LicensePackages::where('id', $getCreatedSubscription->license_id)->first();
+
+                    $getPixelAmount = PixelPackages::where('id', $getCreatedSubscription->pixel_id)->first();
+
+                    $transactionObject = [
+                        'type' => 1,
+                        'is_pixel_purchased' => 1,
+                        'is_license_purchased' => 1,
+                        'is_withdrawal_amount_paid' => 0,
+                        'is_reward_claimed' => 0,
+                        'pixel_amount' => $getPixelAmount->price,
+                        'license_amount' => $licenseAmount->price,
+                        'user_id' => $getCreatedSubscription->user_id,
+                        'date' => Carbon::now()->addSecond(10)
+                    ];
+
+                    $saveTransaction = Transactions::create($transactionObject);
+                } else {
+                    //only license is purchased
+
+                    //get the license amount
+                    $licenseAmount = LicensePackages::where('id', $getCreatedSubscription->license_id)->first();
+
+
+                    $transactionObject = [
+                        'type' => 1,
+                        'is_pixel_purchased' => 0,
+                        'is_license_purchased' => 1,
+                        'is_withdrawal_amount_paid' => 0,
+                        'is_reward_claimed' => 0,
+                        'license_amount' => $licenseAmount->price,
+                        'user_id' => $getCreatedSubscription->user_id,
+                        'date' => Carbon::now()->addSecond(10)
+                    ];
+
+                    $saveTransaction = Transactions::create($transactionObject);
+                }
+            } else {
+                //only pixel purchased
+                $getPixelAmount = PixelPackages::where('id', $getCreatedSubscription->pixel_id)->first();
+
+                // dd($getPixelAmount->price);
+                $transactionObject = [
+                    'type' => 1,
+                    'is_pixel_purchased' => 1,
+                    'is_license_purchased' => 0,
+                    'is_withdrawal_amount_paid' => 0,
+                    'is_reward_claimed' => 0,
+                    'pixel_amount' => $getPixelAmount->price,
+                    'user_id' => $getCreatedSubscription->user_id,
+                    'date' => Carbon::now()->addSecond(10)
+                ];
+
+                $saveTransaction = Transactions::create($transactionObject);
+            }
+        }
+
 
         return $this->sendResponse($subscription, 'Subscription type updated successfully.');
     }
