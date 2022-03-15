@@ -121,20 +121,19 @@ class SubscriptionsController extends GenericResponseController
 
         if ($getCreatedSubscription->pixel_id) {
             if ($getCreatedSubscription->license_id) {
-                /**
-                 * !THIS DATE COMPARISON IS NOT WORKING
-                 */
-                if ($getCreatedSubscription->pixel_purschase_date == $getCreatedSubscription->license_purcahse_date) {
+
+                if (Carbon::parse($getCreatedSubscription->pixel_purchase_date)->eq(Carbon::parse($getCreatedSubscription->license_purchase_date))) {
 
                     //both pixel and license is purchased at the same time
 
                     $licenseAmount = LicensePackages::where('id', $getCreatedSubscription->license_id)->first();
 
                     $getPixelAmount = PixelPackages::where('id', $getCreatedSubscription->pixel_id)->first();
-
                     $transactionObject = [
                         'type' => 1,
                         'is_pixel_purchased' => 1,
+                        'pixel_id' => $getCreatedSubscription->pixel_id,
+                        'license_id' => $getCreatedSubscription->license_id,
                         'is_license_purchased' => 1,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
@@ -146,6 +145,7 @@ class SubscriptionsController extends GenericResponseController
 
                     $saveTransaction = Transactions::create($transactionObject);
                 } else {
+
                     //only license is purchased
 
                     //get the license amount
@@ -156,6 +156,7 @@ class SubscriptionsController extends GenericResponseController
                         'type' => 1,
                         'is_pixel_purchased' => 0,
                         'is_license_purchased' => 1,
+                        'license_id' => $getCreatedSubscription->license_id,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
                         'license_amount' => $licenseAmount->price,
@@ -166,14 +167,16 @@ class SubscriptionsController extends GenericResponseController
                     $saveTransaction = Transactions::create($transactionObject);
                 }
             } else {
+
                 //only pixel purchased
                 $getPixelAmount = PixelPackages::where('id', $getCreatedSubscription->pixel_id)->first();
 
-                // dd($getPixelAmount->price);
+
                 $transactionObject = [
                     'type' => 1,
                     'is_pixel_purchased' => 1,
                     'is_license_purchased' => 0,
+                    'pixel_id' => $getCreatedSubscription->pixel_id,
                     'is_withdrawal_amount_paid' => 0,
                     'is_reward_claimed' => 0,
                     'pixel_amount' => $getPixelAmount->price,
@@ -208,8 +211,14 @@ class SubscriptionsController extends GenericResponseController
         $input = $request->all();
 
         if (isset($input["license_id"])) {
+
+
             //this extra seconds added because it will take time to complete the subscribe process. So once the subscription process is finished then we want to start the license time
+
+            $getLicensePackage = LicensePackages::where('id', $input["license_id"])->first();
+
             $input["license_purchase_date"] = Carbon::now()->addSecond(10);
+            $input["license_expiration_date"] = Carbon::now()->addSecond(10)->addDays($getLicensePackage->duration_in_days);
         }
 
         $subscription = Subscriptions::find($request->id);
@@ -223,12 +232,14 @@ class SubscriptionsController extends GenericResponseController
 
 
         if ($getCreatedSubscription->pixel_id) {
-            if ($getCreatedSubscription->license_id) {
+
+            if ($getCreatedSubscription->license_id != 0) {
+
                 /**
                  * !THIS DATE COMPARISON IS NOT WORKING
                  */
-                if ($getCreatedSubscription->pixel_purschase_date->eq($getCreatedSubscription->license_purcahse_date)) {
-                    dd("both sme");
+                if ((Carbon::parse($getCreatedSubscription->license_purchase_date)) && Carbon::parse($getCreatedSubscription->pixel_purchase_date)->eq(Carbon::parse($getCreatedSubscription->license_purchase_date))) {
+
                     //both pixel and license is purchased at the same time
 
                     $licenseAmount = LicensePackages::where('id', $getCreatedSubscription->license_id)->first();
@@ -239,6 +250,8 @@ class SubscriptionsController extends GenericResponseController
                         'type' => 1,
                         'is_pixel_purchased' => 1,
                         'is_license_purchased' => 1,
+                        'pixel_id' => $getCreatedSubscription->pixel_id,
+                        'license_id' => $getCreatedSubscription->license_id,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
                         'pixel_amount' => $getPixelAmount->price,
@@ -259,6 +272,7 @@ class SubscriptionsController extends GenericResponseController
                         'type' => 1,
                         'is_pixel_purchased' => 0,
                         'is_license_purchased' => 1,
+                        'license_id' => $getCreatedSubscription->license_id,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
                         'license_amount' => $licenseAmount->price,
@@ -269,13 +283,15 @@ class SubscriptionsController extends GenericResponseController
                     $saveTransaction = Transactions::create($transactionObject);
                 }
             } else {
+
                 //only pixel purchased
                 $getPixelAmount = PixelPackages::where('id', $getCreatedSubscription->pixel_id)->first();
 
-                // dd($getPixelAmount->price);
+
                 $transactionObject = [
                     'type' => 1,
                     'is_pixel_purchased' => 1,
+                    'pixel_id' => $getCreatedSubscription->pixel_id,
                     'is_license_purchased' => 0,
                     'is_withdrawal_amount_paid' => 0,
                     'is_reward_claimed' => 0,

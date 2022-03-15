@@ -13,6 +13,8 @@ class Transactions extends Model
         'type', 'is_pixel_purchased', 'is_license_purchased',
         'is_withdrawal_amount_paid',
         'is_reward_claimed',
+        'license_id',
+        'pixel_id',
         'pixel_amount',
         'license_amount',
         'withdrawal_fee_amount',

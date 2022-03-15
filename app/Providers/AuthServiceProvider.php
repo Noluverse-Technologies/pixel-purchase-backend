@@ -46,5 +46,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('can_manage_user_subscription', function ($user) {
             return $user->role == 1;
         });
+        // define a editor role 
+        Gate::define('can_view_transactions', function ($user) {
+            if ($user->role == 2 || $user->role == 1) {
+                return true;
+            }
+        });
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Payment\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/payment', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:api'], function () {
+
+
+
+    //subscribed type routes
+    Route::group(['prefix' => 'transactions'], function () {
+
+        //only admin can manage user subscription
+        Route::middleware(['can:can_view_transactions'])->group(function () {
+            Route::get('/view', [PaymentController::class, 'getAllTransactionByUser']);
+        });
+    });
 });
