@@ -17,8 +17,7 @@ class TransformerController extends Controller
         foreach ($data as $item) {
             //return json object for each fields
             foreach ($fields as $val) {
-                dd($val
-            );
+
                 $transformedData[] = [$val => $item->$val];
             }
         }
