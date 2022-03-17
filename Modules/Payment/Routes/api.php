@@ -24,6 +24,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         //only admin can manage user subscription
         Route::middleware(['can:can_view_transactions'])->group(function () {
             Route::get('/view', [PaymentController::class, 'getAllTransactionByUser']);
+
+            Route::get('/view_by_month', [PaymentController::class, 'getUserTransactionsByMonth']);
         });
     });
 });

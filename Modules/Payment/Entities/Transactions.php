@@ -32,4 +32,14 @@ class Transactions extends Model
     {
         return $this->belongsTo('Modules\User\Entities\User', 'user_id');
     }
+
+    public function hasPixel()
+    {
+        return $this->hasOne('Modules\Pixels\Entities\PixelPackages', 'id', 'pixel_id');
+    }
+
+    public function hasLicense()
+    {
+        return $this->hasOne('Modules\License\Entities\LicensePackages', 'id', 'license_id');
+    }
 }
