@@ -26,8 +26,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/view_all_subscription_by_user/{id}', [SubscriptionsController::class, 'getAllUserSubscriptionById']);
 
         Route::get('/view_all_subscription', [SubscriptionsController::class, 'getAllSubscriptions']);
+        Route::get('/view_all_nolu_plus_subscription', [SubscriptionsController::class, 'getNoluPlusSubscriptionByUser']);
 
         Route::post('/create', [SubscriptionsController::class, 'createSubscription']);
+
+        Route::post('/create_nolu_plus', [SubscriptionsController::class, 'createNoluPlusSubscription']);
+
 
         Route::post('/edit', [SubscriptionsController::class, 'updateSubscription']);
 

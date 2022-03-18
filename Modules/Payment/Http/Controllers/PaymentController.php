@@ -35,8 +35,6 @@ class PaymentController extends GenericResponseController
     public function getUserTransactionsByMonth(Request $request)
     {
 
-
-
         $validator = Validator::make($request->all(), [
             'user_id' => 'exists:users,id'
         ]);
@@ -46,7 +44,7 @@ class PaymentController extends GenericResponseController
         }
 
         $user_id = $request->user_id;
-        $transactions = Transactions::with(['hasPixel', 'hasLicense'])->whereMonth('created_at', $request->month)->where('user_id', $user_id)->get();
+        $transactions = Transactions::with(['hasPixel', 'hasLicense', 'hasNoluPlusSubscription'])->whereMonth('created_at', $request->month)->where('user_id', $user_id)->get();
 
 
         return $this->sendResponse($transactions, 'User Transaction retrieved successfully.');

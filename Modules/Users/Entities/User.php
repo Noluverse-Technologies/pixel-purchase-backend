@@ -24,7 +24,8 @@ class User extends Authenticatable
         'password',
         'role',
         'image',
-        'user_type'
+        'user_type',
+        'is_nolu_plus'
     ];
 
     /**

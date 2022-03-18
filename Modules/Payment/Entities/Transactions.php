@@ -20,7 +20,9 @@ class Transactions extends Model
         'withdrawal_fee_amount',
         'reward_claimed_amount',
         'user_id',
-        'date'
+        'date',
+        'is_nolu_plus_purchased',
+        'nolu_plus_subscription_id'
     ];
 
     protected $hidden = [
@@ -41,5 +43,10 @@ class Transactions extends Model
     public function hasLicense()
     {
         return $this->hasOne('Modules\License\Entities\LicensePackages', 'id', 'license_id');
+    }
+
+    public function hasNoluPlusSubscription()
+    {
+        return $this->hasOne('Modules\Subscriptions\Entities\NoluPlusSubscriptoin', 'id', 'nolu_plus_subscription_id');
     }
 }

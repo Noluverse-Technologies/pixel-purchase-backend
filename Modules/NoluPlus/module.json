@@ -1,0 +1,13 @@
+{
+    "name": "NoluPlus",
+    "alias": "noluplus",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\NoluPlus\\Providers\\NoluPlusServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

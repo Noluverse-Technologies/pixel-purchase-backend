@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('wallet_address')->nullable();
             $table->string('image')->nullable();
             $table->string('user_type')->default("nolu");
+            $table->boolean('is_nolu_plus')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 60)->nullable()->default(null);
             $table->enum('role',  [1, 2, 3])->default(3)->comment("admin->1, subscribed->2, nonsubscribed->3");
