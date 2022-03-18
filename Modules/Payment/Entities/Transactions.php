@@ -22,7 +22,8 @@ class Transactions extends Model
         'user_id',
         'date',
         'is_nolu_plus_purchased',
-        'nolu_plus_subscription_id'
+        'nolu_plus_subscription_id',
+        'nolu_plus_amount'
     ];
 
     protected $hidden = [

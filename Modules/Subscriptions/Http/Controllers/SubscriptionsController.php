@@ -139,8 +139,8 @@ class SubscriptionsController extends GenericResponseController
                         'is_license_purchased' => 1,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
-                        'pixel_amount' => $getPixelAmount->price,
-                        'license_amount' => $licenseAmount->price,
+                        'pixel_amount' => - ($getPixelAmount->price),
+                        'license_amount' => - ($licenseAmount->price),
                         'user_id' => $getCreatedSubscription->user_id,
                         'date' => Carbon::now()->addSecond(10)
                     ];
@@ -161,7 +161,7 @@ class SubscriptionsController extends GenericResponseController
                         'license_id' => $getCreatedSubscription->license_id,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
-                        'license_amount' => $licenseAmount->price,
+                        'license_amount' => - ($licenseAmount->price),
                         'user_id' => $getCreatedSubscription->user_id,
                         'date' => Carbon::now()->addSecond(10)
                     ];
@@ -181,7 +181,7 @@ class SubscriptionsController extends GenericResponseController
                     'pixel_id' => $getCreatedSubscription->pixel_id,
                     'is_withdrawal_amount_paid' => 0,
                     'is_reward_claimed' => 0,
-                    'pixel_amount' => $getPixelAmount->price,
+                    'pixel_amount' => - ($getPixelAmount->price),
                     'user_id' => $getCreatedSubscription->user_id,
                     'date' => Carbon::now()->addSecond(10)
                 ];
@@ -227,15 +227,18 @@ class SubscriptionsController extends GenericResponseController
             $input["expiration_date"] = Carbon::parse($input["purchase_date"])->addDays($duration);
         }
 
-        $subscription = NoluPlusSubscriptoin::create($input);
+        $noluPlusSubscription = NoluPlusSubscriptoin::create($input);
 
-        $getCreatedSubscription = NoluPlusSubscriptoin::find($subscription->id);
-      
+        $getCreatedSubscription = NoluPlusSubscriptoin::find($noluPlusSubscription->id);
+        $getNoluPlusPackage = $getCreatedSubscription->with('hasNoluPlusPackage')->first();
+
+
 
         $transactionObject = [
             'type' => 1,
             'is_nolu_plus_purchased' => 1,
             'nolu_plus_subscription_id' => $getCreatedSubscription->id,
+            'nolu_plus_amount' => $getNoluPlusPackage->hasNoluPlusPackage->price,
             'user_id' => $getCreatedSubscription->user_id,
             'date' => Carbon::now()->addSecond(10)
         ];
@@ -245,7 +248,7 @@ class SubscriptionsController extends GenericResponseController
 
 
 
-        return $this->sendResponse($subscription, 'Subscription type created successfully.');
+        return $this->sendResponse($noluPlusSubscription , 'Subscription type created successfully.');
     }
 
     /**
@@ -320,8 +323,8 @@ class SubscriptionsController extends GenericResponseController
                         'license_id' => $getCreatedSubscription->license_id,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
-                        'pixel_amount' => $getPixelAmount->price,
-                        'license_amount' => $licenseAmount->price,
+                        'pixel_amount' => - ($getPixelAmount->price),
+                        'license_amount' => - ($licenseAmount->price),
                         'user_id' => $getCreatedSubscription->user_id,
                         'date' => Carbon::now()->addSecond(10)
                     ];
@@ -341,7 +344,7 @@ class SubscriptionsController extends GenericResponseController
                         'license_id' => $getCreatedSubscription->license_id,
                         'is_withdrawal_amount_paid' => 0,
                         'is_reward_claimed' => 0,
-                        'license_amount' => $licenseAmount->price,
+                        'license_amount' => - ($licenseAmount->price),
                         'user_id' => $getCreatedSubscription->user_id,
                         'date' => Carbon::now()->addSecond(10)
                     ];
@@ -361,7 +364,7 @@ class SubscriptionsController extends GenericResponseController
                     'is_license_purchased' => 0,
                     'is_withdrawal_amount_paid' => 0,
                     'is_reward_claimed' => 0,
-                    'pixel_amount' => $getPixelAmount->price,
+                    'pixel_amount' => - ($getPixelAmount->price),
                     'user_id' => $getCreatedSubscription->user_id,
                     'date' => Carbon::now()->addSecond(10)
                 ];

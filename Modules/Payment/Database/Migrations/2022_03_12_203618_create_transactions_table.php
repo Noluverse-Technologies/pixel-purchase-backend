@@ -24,6 +24,7 @@ class CreateTransactionsTable extends Migration
             $table->double('nolu_plus_subscription_id')->nullable();
             $table->double('pixel_id')->nullable();
             $table->double('pixel_amount')->nullable();
+            $table->double('nolu_plus_amount')->nullable();
             $table->double('license_id')->nullable();
             $table->double('license_amount')->nullable();
             $table->double('withdrawal_fee_amount')->nullable();

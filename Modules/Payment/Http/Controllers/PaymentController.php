@@ -44,9 +44,21 @@ class PaymentController extends GenericResponseController
         }
 
         $user_id = $request->user_id;
-        $transactions = Transactions::with(['hasPixel', 'hasLicense', 'hasNoluPlusSubscription'])->whereMonth('created_at', $request->month)->where('user_id', $user_id)->get();
+        $transactions = Transactions::with(['hasPixel', 'hasLicense', 'hasNoluPlusSubscription', 'hasNoluPlusSubscription.hasNoluPlusPackage'])->whereMonth('created_at', $request->month)->where('user_id', $user_id)->get();
+        $getPixelAmountSum = Transactions::sum('pixel_amount');
+        $getLicenseAmountSum = Transactions::sum('license_amount');
+        $getMaintainanceFeeSum = Transactions::sum('withdrawal_fee_amount');
+        $getRewardAmount = Transactions::sum('reward_claimed_amount');
+        $getNoluPlus = Transactions::sum('nolu_plus_amount');
 
+        $totalCredits = $getPixelAmountSum + $getLicenseAmountSum + $getMaintainanceFeeSum;
 
-        return $this->sendResponse($transactions, 'User Transaction retrieved successfully.');
+        $totalDebits = $getRewardAmount + $getNoluPlus;
+
+        if (count($transactions) > 0) {
+            return $this->sendResponse([$transactions, "total_credits" => $totalCredits, "total_debits" => $totalDebits], 'User Transaction retrieved successfully.');
+        } else {
+            return $this->sendResponse([$transactions, "total_credits" => 0, "total_debits" => 0], 'User Transaction retrieved successfully.');
+        }
     }
 }

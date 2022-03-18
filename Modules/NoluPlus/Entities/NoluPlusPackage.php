@@ -12,7 +12,9 @@ class NoluPlusPackage extends Model
     protected $fillable = [
         'name',
         'duration_in_days',
-        'discount_percentage'
+        'discount_percentage',
+        'price',
+        'currency'
     ];
 
     protected $hidden = [

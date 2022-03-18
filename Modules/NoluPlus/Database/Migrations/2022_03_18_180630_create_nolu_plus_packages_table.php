@@ -18,6 +18,8 @@ class CreateNoluPlusPackagesTable extends Migration
             $table->string('name')->nullable();
             $table->integer('duration_in_days')->nullable();
             $table->float('discount_percentage')->nullable();
+            $table->float('price')->nullable();
+            $table->string('currency')->nullable();
             $table->timestamps();
         });
     }
