@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Overview\Http\Controllers\OverviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,17 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/overview', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:api'], function () {
+
+    Route::group(['prefix' => 'events'], function () {
+        Route::get('/view', [OverviewController::class, 'getEvents']);
+
+        Route::middleware(['can:create_license_pixels'])->group(function () {
+            Route::post('/create', [OverviewController::class, 'createEvents']);
+            Route::delete('/delete', [OverviewController::class, 'deleteEvents']);
+        });
+    });
+    //pixel routes
+    Route::group(['prefix' => 'dashboard'], function () {
+    });
 });

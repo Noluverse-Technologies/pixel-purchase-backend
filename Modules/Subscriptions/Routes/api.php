@@ -15,10 +15,10 @@ use Modules\Subscriptions\Http\Controllers\SubscriptionsController;
 |
 */
 
-//*any logged in user will be able to buy pixels and licenses
+//*subscription routes
 Route::group(['middleware' => 'auth:api'], function () {
 
-    //pixel routes
+
     Route::group(['prefix' => 'subscribe'], function () {
         //subscribe parent level routes
         Route::get('/view_user_subscription/{id}', [SubscriptionsController::class, 'getSubscriptionByUser']);

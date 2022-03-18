@@ -2,78 +2,59 @@
 
 namespace Modules\Overview\Http\Controllers;
 
+use App\Http\Controllers\GenericResponseController;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Overview\Entities\Events;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Carbon;
 
-class OverviewController extends Controller
+
+class OverviewController extends GenericResponseController
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+    public function createEvents(Request $request)
     {
-        return view('overview::index');
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'date_from' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $Events = Events::create($request->all());
+
+        return $this->sendResponse($Events, 'Events created successfully.');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function getEvents()
     {
-        return view('overview::create');
+        $events = Events::paginate(5);
+
+        return $this->sendResponse($events, 'Events retrieved successfully.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
+    public function deleteEvents(Request $request)
     {
-        //
-    }
+        $validator = Validator::make($request->all(), [
+            'id' => 'required'
+        ]);
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('overview::show');
-    }
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('overview::edit');
-    }
+        $events = Events::find($request->id);
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        if (is_null($events)) {
+            return $this->sendError('Events not found.');
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        $events->delete();
+
+        return $this->sendResponse($events, 'Events deleted successfully.');
     }
 }
