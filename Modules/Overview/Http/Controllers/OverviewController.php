@@ -32,7 +32,7 @@ class OverviewController extends GenericResponseController
 
     public function getEvents()
     {
-        $events = Events::paginate(5);
+        $events = collect(Events::all())->sortBy("id")->reverse()->values();
 
         return $this->sendResponse($events, 'Events retrieved successfully.');
     }

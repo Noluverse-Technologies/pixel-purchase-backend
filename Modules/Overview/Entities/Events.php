@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Events extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
+        'description',
         'date_from',
         'date_till',
         'event_link'

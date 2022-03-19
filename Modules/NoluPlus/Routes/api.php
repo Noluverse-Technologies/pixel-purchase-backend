@@ -19,10 +19,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'noluplus'], function () {
         Route::group(['prefix' => 'package'], function () {
 
+            Route::get('/view', [NoluPlusController::class, 'getNoluPlusPackages']);
             //only admin can manage user subscription
             Route::middleware(['can:create_license_pixels'])->group(function () {
                 Route::post('/create', [NoluPlusController::class, 'createPackage']);
-                Route::get('/view', [NoluPlusController::class, 'getAllPackages']);
+                Route::delete('/delete', [NoluPlusController::class, 'deleteNoluPlusPackageById']);
             });
         });
     });

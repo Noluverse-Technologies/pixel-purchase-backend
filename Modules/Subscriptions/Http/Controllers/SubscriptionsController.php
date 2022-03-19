@@ -4,12 +4,14 @@ namespace Modules\Subscriptions\Http\Controllers;
 
 
 use Illuminate\Http\Request;
+use Modules\Users\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\GenericResponseController;
 use Modules\Subscriptions\Entities\Subscriptions;
 use Modules\Subscriptions\Entities\SubscriptionType;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Modules\License\Entities\LicensePackages;
 use Modules\NoluPlus\Entities\NoluPlusPackage;
 use Modules\Payment\Entities\Transactions;
@@ -219,36 +221,53 @@ class SubscriptionsController extends GenericResponseController
 
         //license expiration date calculation
         if (isset($input["nolu_plus_package_id"])) {
+
             $getPackageInfo = NoluPlusPackage::where('id', $input["nolu_plus_package_id"])->first();
+
             $getDuration = $getPackageInfo->duration_in_days;
+
             $input["purchase_date"] = Carbon::now()->addSecond(10);
+
             $duration = $getDuration;
 
             $input["expiration_date"] = Carbon::parse($input["purchase_date"])->addDays($duration);
         }
 
-        $noluPlusSubscription = NoluPlusSubscriptoin::create($input);
+        if (Auth::user()->is_nolu_plus == 0) {
 
-        $getCreatedSubscription = NoluPlusSubscriptoin::find($noluPlusSubscription->id);
-        $getNoluPlusPackage = $getCreatedSubscription->with('hasNoluPlusPackage')->first();
-
+            $noluPlusSubscription = NoluPlusSubscriptoin::create($input);
 
 
-        $transactionObject = [
-            'type' => 1,
-            'is_nolu_plus_purchased' => 1,
-            'nolu_plus_subscription_id' => $getCreatedSubscription->id,
-            'nolu_plus_amount' => $getNoluPlusPackage->hasNoluPlusPackage->price,
-            'user_id' => $getCreatedSubscription->user_id,
-            'date' => Carbon::now()->addSecond(10)
-        ];
+            if ($noluPlusSubscription) {
 
-        $saveTransaction = Transactions::create($transactionObject);
+                $getUser = User::where('id', $input["user_id"])->first();
+                $getUser->is_nolu_plus = 1;
+                $getUser->save();
+            }
+
+            $getCreatedSubscription = NoluPlusSubscriptoin::find($noluPlusSubscription->id);
+            $getNoluPlusPackage = $getCreatedSubscription->with('hasNoluPlusPackage')->first();
 
 
 
+            $transactionObject = [
+                'type' => 1,
+                'is_nolu_plus_purchased' => 1,
+                'nolu_plus_subscription_id' => $getCreatedSubscription->id,
+                'nolu_plus_amount' => $getNoluPlusPackage->hasNoluPlusPackage->price,
+                'user_id' => $getCreatedSubscription->user_id,
+                'date' => Carbon::now()->addSecond(10)
+            ];
 
-        return $this->sendResponse($noluPlusSubscription , 'Subscription type created successfully.');
+            $saveTransaction = Transactions::create($transactionObject);
+
+
+
+
+            return $this->sendResponse($noluPlusSubscription, 'Subscription type created successfully.');
+        } else {
+            return $this->sendError('User is already subscribed for Nolu Plus', $validator->errors());
+        }
     }
 
     /**
@@ -256,7 +275,7 @@ class SubscriptionsController extends GenericResponseController
      */
     function getNoluPlusSubscriptionByUser(Request $request)
     {
-        $subscription = NoluPlusSubscriptoin::with('hasNoluPlusPackage')->where('user_id', $request->user_id)->get();
+        $subscription = NoluPlusSubscriptoin::with('hasNoluPlusPackage')->where('user_id', $request->user_id)->where('has_expired', 0)->get();
 
         return $this->sendResponse($subscription, 'Subscription retrieved successfully.');
     }
