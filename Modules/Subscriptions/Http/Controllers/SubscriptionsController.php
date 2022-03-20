@@ -66,10 +66,12 @@ class SubscriptionsController extends GenericResponseController
         return $this->sendResponse($subscriptionTypes, 'Subscription types retrieved successfully.');
     }
 
-
+    /**
+     * Get all subscription by user id
+     */
     function getSubscriptionByUser($id)
     {
-        $subscription = Subscriptions::with('hasPixel')->where('user_id', $id)->paginate(10);
+        $subscription = Subscriptions::with('hasPixel', 'hasLicense')->where('user_id', $id)->paginate(10);
 
         return $this->sendResponse($subscription, 'Subscription retrieved successfully.');
     }
@@ -260,9 +262,6 @@ class SubscriptionsController extends GenericResponseController
             ];
 
             $saveTransaction = Transactions::create($transactionObject);
-
-
-
 
             return $this->sendResponse($noluPlusSubscription, 'Subscription type created successfully.');
         } else {

@@ -16,7 +16,10 @@ use Modules\Payment\Http\Controllers\PaymentController;
 
 Route::group(['middleware' => 'auth:api'], function () {
 
-
+    //subscribed type routes
+    Route::group(['prefix' => 'reward'], function () {
+        Route::post('/calculate', [PixelsController::class, 'calculateReward']);
+    });
 
     //subscribed type routes
     Route::group(['prefix' => 'transactions'], function () {

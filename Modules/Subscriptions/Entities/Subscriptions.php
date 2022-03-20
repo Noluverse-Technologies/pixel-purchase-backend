@@ -47,4 +47,11 @@ class Subscriptions extends Model
     {
         return $this->belongsTo('Modules\Pixels\Entities\PixelPackages', 'pixel_id');
     }
+    /**
+     * Subscription and license relationship
+     */
+    public function hasLicense()
+    {
+        return $this->belongsTo('Modules\License\Entities\LicensePackages', 'license_id');
+    }
 }

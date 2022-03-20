@@ -61,4 +61,17 @@ class PaymentController extends GenericResponseController
             return $this->sendResponse([$transactions, "total_credits" => 0, "total_debits" => 0], 'User Transaction retrieved successfully.');
         }
     }
+
+
+    public function calculateReward(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'subscription_id' => 'exists:subscriptions,id'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+    }
 }
