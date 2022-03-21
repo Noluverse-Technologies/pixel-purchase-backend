@@ -115,6 +115,7 @@ class SubscriptionsController extends GenericResponseController
             $getTheLicense = LicensePackages::where('id', $input["license_id"])->first();
             $licenseDuration = $getTheLicense->duration_in_days;
             $input["license_purchase_date"] = Carbon::now()->addSecond(10);
+            $input["last_reward_withdrawalDate"] = Carbon::now()->addSecond(10);
             $input["license_duration"] = $licenseDuration;
 
             $input["license_expiration_date"] = Carbon::parse($input["license_purchase_date"])->addDays($licenseDuration);

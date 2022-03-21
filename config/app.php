@@ -42,6 +42,7 @@ return [
     */
 
     'debug' => (bool) env('APP_DEBUG', false),
+    'oneNoluToUSDT' => env('ONE_USDT_TO_NOLU'),
 
     /*
     |--------------------------------------------------------------------------

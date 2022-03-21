@@ -18,7 +18,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     //subscribed type routes
     Route::group(['prefix' => 'reward'], function () {
-        Route::post('/calculate', [PixelsController::class, 'calculateReward']);
+        Route::post('/calculate', [PaymentController::class, 'calculateReward']);
+
+        Route::post('/claimall', [PaymentController::class, 'claimAllReward']);
     });
 
     //subscribed type routes

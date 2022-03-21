@@ -22,7 +22,8 @@ class Subscriptions extends Model
         'usdt_reward_amount',
         'subscription_type',
         'license_duration',
-        'license_expiration_date'
+        'license_expiration_date',
+        'last_reward_withdrawalDate'
 
     ];
 
@@ -37,7 +38,7 @@ class Subscriptions extends Model
      */
     public function hasUser()
     {
-        return $this->belongsTo('Modules\Users\Entities\Users', 'user_id');
+        return $this->belongsTo('Modules\Users\Entities\User', 'user_id');
     }
 
     /**

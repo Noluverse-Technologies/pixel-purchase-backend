@@ -24,6 +24,7 @@ class CreateSubscriptionsTable extends Migration
             $table->string('license_purchase_date')->nullable();
             $table->integer('license_duration')->default(0);
             $table->string('license_expiration_date')->nullable();
+            $table->string('last_reward_withdrawalDate')->nullable();
             $table->boolean('withdrawal_amount_is_paid')->nullable();
             $table->string('withdrawal_fee_payment_date')->nullable();
             $table->boolean('has_expired')->default(0);
