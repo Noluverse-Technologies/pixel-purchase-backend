@@ -16,6 +16,7 @@ use Modules\Payment\Http\Controllers\PaymentController;
 
 Route::group(['middleware' => 'auth:api'], function () {
 
+    Route::post('/paywithdrawalfee', [PaymentController::class, 'payWithdrawalFee']);
     //subscribed type routes
     Route::group(['prefix' => 'reward'], function () {
         Route::post('/calculate', [PaymentController::class, 'calculateReward']);

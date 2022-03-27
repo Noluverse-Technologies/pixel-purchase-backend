@@ -72,6 +72,7 @@ class PaymentController extends GenericResponseController
     public function calculateReward(Request $request)
     {
 
+
         $validator = Validator::make($request->all(), [
             'subscription_id' => 'exists:subscriptions,id'
         ]);
@@ -84,7 +85,7 @@ class PaymentController extends GenericResponseController
 
         foreach ($getAllSubscriptions as $subscription) {
 
-            if ($subscription->license_id != null) {
+            if ($subscription->license_id != 0) {
 
 
                 //check if the subscription has not expired
@@ -96,7 +97,9 @@ class PaymentController extends GenericResponseController
                     //get the license purchase date
                     $lastRewardEarnedDate = Carbon::parse($subscription->last_reward_withdrawalDate);
 
-                    $rewardPercentage = $subscription->hasLicense->reward_amount;
+
+                    $rewardPercentage = $subscription->hasLicense["reward_amount"];
+
 
                     $totalLicenseHoldMinutes = $lastRewardEarnedDate->diffInMinutes($getTodaysDate);
 
@@ -108,6 +111,7 @@ class PaymentController extends GenericResponseController
 
                     $subscription->nolu_reward_amount = $totalRewardInNolu;
                     $subscription->usdt_reward_amount = $totalRewardInUSDT;
+                    // dd($rewardPercentage );
 
                     $subscription->save();
                 }
@@ -129,11 +133,12 @@ class PaymentController extends GenericResponseController
 
 
         $getAllUserSubscriptions = Subscriptions::where('user_id', $request->user_id)->where('has_expired', 0)->get();
+
         $totalNoluReward = 0;
         $totalUsdtReward = 0;
 
         foreach ($getAllUserSubscriptions as $subscription) {
-            if ($subscription->license_id != null) {
+            if ($subscription->license_id != 0) {
                 if ($subscription->withdrawal_amount_is_paid == 1) {
                     $totalNoluReward += $subscription->nolu_reward_amount;
                     $totalUsdtReward += $subscription->usdt_reward_amount;
@@ -142,16 +147,19 @@ class PaymentController extends GenericResponseController
                     $subscription->last_reward_withdrawalDate = Carbon::now();
                     $subscription->save();
                 } else {
-                    continue;
+                    return $this->sendResponse([], 'Your maintainance fee is not paid yet.');
                 }
             }
         }
 
+
+
         if ($totalNoluReward != 0) {
+
 
             $getNoluPlusInfo = NoluPlusSubscriptoin::with('hasNoluPlusPackage')->where('user_id', $request->user_id)->where('has_expired', 0)->get();
 
-            if (count($getNoluPlusInfo) > 0) {
+            if (count($getNoluPlusInfo) > 0  && $getNoluPlusInfo[0]->hasNoluPlusPackage->is_active == 1) {
 
                 $transactionObject = [
                     'type' => 2,
@@ -174,7 +182,7 @@ class PaymentController extends GenericResponseController
             $transactionObject = [
                 'type' => 2,
                 'is_reward_claimed' => 1,
-                'reward_claimed_amount' => -$totalNoluReward,
+                'reward_claimed_amount' => $totalNoluReward,
                 'user_id' => $request->user_id,
                 'date' => Carbon::now()->addSecond(10)
             ];
@@ -187,14 +195,57 @@ class PaymentController extends GenericResponseController
                 return $this->sendResponse($transaction, 'Reward Claimed successfully.');
             }
         } else {
-            return $this->sendError('No rewards to be claimed.');
+
+            return $this->sendResponse([], 'No rewards available to claime');
         }
     }
 
     //TODO: this function is yet to be done
     //!This withdraw fee is also called maintanence fee
 
-    public function payWithdrawalFee()
+    public function payWithdrawalFee(Request $request)
     {
+        //inputs 'user_id'
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'withdrawal_amount' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $getSubscriptionByUser = Subscriptions::where('user_id', $request->user_id)->get();
+
+        foreach ($getSubscriptionByUser as $subscription) {
+
+            if ($subscription->license_id != 0) {
+                if($subscription->withdrawal_amount_is_paid !=1){
+                $subscription->withdrawal_amount_is_paid = 1;
+                $subscription->withdrawal_fee_payment_date = Carbon::now();
+                $subscription->save();
+                }else{
+                    return $this->sendResponse([],'You have already paid the maintainance fee.');
+                }
+            } else {
+                continue;
+            }
+
+            $transactionObject = [
+                'type' => 1,
+                'is_withdrawal_amount_paid' => 1,
+                'withdrawal_fee_amount' => - ($request->withdrawal_amount),
+                'user_id' => $request->user_id,
+                'date' => Carbon::now()->addSecond(10)
+            ];
+
+            $transaction = Transactions::create($transactionObject);
+
+            $transaction->save();
+
+            if ($transaction) {
+                return $this->sendResponse($transaction, 'Withdrawal fee paid successfully.');
+            }
+        }
     }
 }
