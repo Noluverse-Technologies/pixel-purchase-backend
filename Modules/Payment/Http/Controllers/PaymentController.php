@@ -220,12 +220,12 @@ class PaymentController extends GenericResponseController
         foreach ($getSubscriptionByUser as $subscription) {
 
             if ($subscription->license_id != 0) {
-                if($subscription->withdrawal_amount_is_paid !=1){
-                $subscription->withdrawal_amount_is_paid = 1;
-                $subscription->withdrawal_fee_payment_date = Carbon::now();
-                $subscription->save();
-                }else{
-                    return $this->sendResponse([],'You have already paid the maintainance fee.');
+                if ($subscription->withdrawal_amount_is_paid != 1) {
+                    $subscription->withdrawal_amount_is_paid = 1;
+                    $subscription->withdrawal_fee_payment_date = Carbon::now();
+                    $subscription->save();
+                } else {
+                    return $this->sendResponse([], 'You have already paid the maintainance fee.');
                 }
             } else {
                 continue;
