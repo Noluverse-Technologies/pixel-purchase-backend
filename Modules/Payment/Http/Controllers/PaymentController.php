@@ -205,6 +205,7 @@ class PaymentController extends GenericResponseController
 
     public function payWithdrawalFee(Request $request)
     {
+
         //inputs 'user_id'
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
@@ -220,32 +221,32 @@ class PaymentController extends GenericResponseController
         foreach ($getSubscriptionByUser as $subscription) {
 
             if ($subscription->license_id != 0) {
-                if ($subscription->withdrawal_amount_is_paid != 1) {
+
+                if (($subscription->withdrawal_amount_is_paid == 0) && ($subscription->withdrawal_fee_payment_date == null || Carbon::now()->subDays($request->duration_in_days) < $subscription->withdrawal_fee_payment_date)) {
                     $subscription->withdrawal_amount_is_paid = 1;
                     $subscription->withdrawal_fee_payment_date = Carbon::now();
                     $subscription->save();
+                    // var_dump($subscription->id);
                 } else {
-                    return $this->sendResponse([], 'You have already paid the maintainance fee.');
+                    return $this->sendResponse('', 'Withdrawal fee has already been paid');
                 }
-            } else {
-                continue;
             }
+        }
 
-            $transactionObject = [
-                'type' => 1,
-                'is_withdrawal_amount_paid' => 1,
-                'withdrawal_fee_amount' => - ($request->withdrawal_amount),
-                'user_id' => $request->user_id,
-                'date' => Carbon::now()->addSecond(10)
-            ];
+        $transactionObject = [
+            'type' => 1,
+            'is_withdrawal_amount_paid' => 1,
+            'withdrawal_fee_amount' => - ($request->withdrawal_amount),
+            'user_id' => $request->user_id,
+            'date' => Carbon::now()->addSecond(10)
+        ];
 
-            $transaction = Transactions::create($transactionObject);
+        $transaction = Transactions::create($transactionObject);
 
-            $transaction->save();
+        $transaction->save();
 
-            if ($transaction) {
-                return $this->sendResponse($transaction, 'Withdrawal fee paid successfully.');
-            }
+        if ($transaction) {
+            return $this->sendResponse($transaction, 'Withdrawal fee paid successfully.');
         }
     }
 }

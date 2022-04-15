@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         });
     });
     //pixel routes
-    Route::group(['prefix' => 'dashboard'], function () {
+    Route::group(['prefix' => 'overview'], function () {
+        Route::get('/data', [OverviewController::class, 'OverviewCalculations']);
     });
 });
