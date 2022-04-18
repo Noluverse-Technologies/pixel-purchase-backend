@@ -30,7 +30,7 @@ class PaymentController extends GenericResponseController
         }
 
         $user_id = $request->user_id;
-        $transactions = Transactions::where('user_id', $user_id)->get();
+        $transactions = Transactions::where('user_id', $user_id)->latest()->take(5)->get();;
 
 
         return $this->sendResponse($transactions, 'User Transaction retrieved successfully.');
@@ -49,7 +49,7 @@ class PaymentController extends GenericResponseController
         }
 
         $user_id = $request->user_id;
-        $transactions = Transactions::with(['hasPixel', 'hasLicense', 'hasNoluPlusSubscription', 'hasNoluPlusSubscription.hasNoluPlusPackage'])->whereMonth('created_at', $request->month)->where('user_id', $user_id)->get();
+        $transactions = Transactions::with(['hasPixel', 'hasLicense', 'hasNoluPlusSubscription', 'hasNoluPlusSubscription.hasNoluPlusPackage'])->whereMonth('created_at', $request->month)->where('user_id', $user_id)->latest()->get();
         $getPixelAmountSum = Transactions::sum('pixel_amount');
         $getLicenseAmountSum = Transactions::sum('license_amount');
         $getMaintainanceFeeSum = Transactions::sum('withdrawal_fee_amount');
