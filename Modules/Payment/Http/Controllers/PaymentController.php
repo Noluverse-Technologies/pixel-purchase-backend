@@ -208,8 +208,7 @@ class PaymentController extends GenericResponseController
 
         //inputs 'user_id'
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
-            'withdrawal_amount' => 'required|numeric|min:0',
+            'user_id' => 'required|exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -222,7 +221,7 @@ class PaymentController extends GenericResponseController
 
             if ($subscription->license_id != 0) {
 
-                if (($subscription->withdrawal_amount_is_paid == 0) && ($subscription->withdrawal_fee_payment_date == null || Carbon::now()->subDays($request->duration_in_days) < $subscription->withdrawal_fee_payment_date)) {
+                if (($subscription->withdrawal_amount_is_paid == 0) && ($subscription->withdrawal_fee_payment_date == null || Carbon::now()->subDays(config('app.durationWithdrawFee')) < $subscription->withdrawal_fee_payment_date)) {
                     $subscription->withdrawal_amount_is_paid = 1;
                     $subscription->withdrawal_fee_payment_date = Carbon::now();
                     $subscription->save();
@@ -236,7 +235,7 @@ class PaymentController extends GenericResponseController
         $transactionObject = [
             'type' => 1,
             'is_withdrawal_amount_paid' => 1,
-            'withdrawal_fee_amount' => - ($request->withdrawal_amount),
+            'withdrawal_fee_amount' => - (config('app.withdrawalFee')),
             'user_id' => $request->user_id,
             'date' => Carbon::now()->addSecond(10)
         ];

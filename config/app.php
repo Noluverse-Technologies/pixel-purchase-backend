@@ -43,6 +43,8 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
     'oneNoluToUSDT' => env('ONE_USDT_TO_NOLU'),
+    'durationWithdrawFee' => env('DURATION_WITHDRAW_FEE'),
+    'withdrawalFee' => env('WIHDRAWAL_FEE_IN_NOLU'),
 
     /*
     |--------------------------------------------------------------------------
